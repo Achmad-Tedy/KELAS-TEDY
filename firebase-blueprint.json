@@ -1,0 +1,179 @@
+{
+  "entities": {
+    "Teacher": {
+      "title": "Teacher",
+      "description": "Akun guru, wali kelas, atau kepala sekolah",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "nip": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "role": { "type": "string", "enum": ["guru", "wali_kelas", "kepala_sekolah"] },
+        "title": { "type": "string" },
+        "assignedClassId": { "type": "string" },
+        "subjectTaught": { "type": "string" },
+        "password": { "type": "string" }
+      },
+      "required": ["id", "name", "nip", "email", "role"]
+    },
+    "Student": {
+      "title": "Student",
+      "description": "Data peserta didik / siswa",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nisn": { "type": "string" },
+        "name": { "type": "string" },
+        "gender": { "type": "string", "enum": ["L", "P"] },
+        "classId": { "type": "string" },
+        "password": { "type": "string" }
+      },
+      "required": ["id", "nisn", "name", "gender", "classId"]
+    },
+    "ClassRoom": {
+      "title": "ClassRoom",
+      "description": "Data ruang kelas",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "gradeLevel": { "type": "number" },
+        "academicYear": { "type": "string" },
+        "homeroomTeacher": { "type": "string" },
+        "studentIds": { "type": "array" }
+      },
+      "required": ["id", "name", "gradeLevel", "academicYear"]
+    },
+    "Subject": {
+      "title": "Subject",
+      "description": "Mata pelajaran",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "code": { "type": "string" },
+        "iconName": { "type": "string" },
+        "color": { "type": "string" },
+        "teacherName": { "type": "string" }
+      },
+      "required": ["id", "name", "code"]
+    },
+    "Group": {
+      "title": "Group",
+      "description": "Kelompok belajar siswa untuk mata pelajaran tertentu",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "classId": { "type": "string" },
+        "subjectId": { "type": "string" },
+        "name": { "type": "string" },
+        "leaderId": { "type": "string" },
+        "memberIds": { "type": "array" },
+        "status": { "type": "string", "enum": ["active", "archived"] },
+        "notes": { "type": "string" }
+      },
+      "required": ["id", "classId", "subjectId", "name", "leaderId", "memberIds"]
+    },
+    "Assignment": {
+      "title": "Assignment",
+      "description": "Penugasan kelompok atau tugas kelas",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "classId": { "type": "string" },
+        "subjectId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "deadline": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "rubricCriteria": { "type": "array" }
+      },
+      "required": ["id", "classId", "subjectId", "title", "deadline"]
+    },
+    "Submission": {
+      "title": "Submission",
+      "description": "Pengumpulan tugas kelompok oleh siswa",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "assignmentId": { "type": "string" },
+        "groupId": { "type": "string" },
+        "submittedAt": { "type": "string" },
+        "notes": { "type": "string" },
+        "fileUrl": { "type": "string" },
+        "fileName": { "type": "string" },
+        "fileSize": { "type": "number" }
+      },
+      "required": ["id", "assignmentId", "groupId", "submittedAt"]
+    },
+    "Grade": {
+      "title": "Grade",
+      "description": "Nilai tugas untuk siswa/kelompok",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "assignmentId": { "type": "string" },
+        "groupId": { "type": "string" },
+        "studentId": { "type": "string" },
+        "isUniform": { "type": "boolean" },
+        "score": { "type": "number" },
+        "feedback": { "type": "string" },
+        "gradedAt": { "type": "string" }
+      },
+      "required": ["id", "assignmentId", "groupId", "studentId", "score"]
+    },
+    "PresentationAssessment": {
+      "title": "PresentationAssessment",
+      "description": "Penilaian rubrik presentasi kelompok",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "assignmentId": { "type": "string" },
+        "groupId": { "type": "string" },
+        "assessedAt": { "type": "string" },
+        "totalScore": { "type": "number" },
+        "notes": { "type": "string" }
+      },
+      "required": ["id", "assignmentId", "groupId", "totalScore"]
+    }
+  },
+  "firestore": {
+    "/teachers/{teacherId}": {
+      "schema": { "$ref": "#/entities/Teacher" },
+      "description": "Koleksi data guru dan staf pengajar"
+    },
+    "/students/{studentId}": {
+      "schema": { "$ref": "#/entities/Student" },
+      "description": "Koleksi data siswa dan peserta didik"
+    },
+    "/classes/{classId}": {
+      "schema": { "$ref": "#/entities/ClassRoom" },
+      "description": "Koleksi ruang kelas"
+    },
+    "/subjects/{subjectId}": {
+      "schema": { "$ref": "#/entities/Subject" },
+      "description": "Koleksi mata pelajaran"
+    },
+    "/groups/{groupId}": {
+      "schema": { "$ref": "#/entities/Group" },
+      "description": "Koleksi kelompok belajar siswa"
+    },
+    "/assignments/{assignmentId}": {
+      "schema": { "$ref": "#/entities/Assignment" },
+      "description": "Koleksi tugas dan proyek kelompok"
+    },
+    "/submissions/{submissionId}": {
+      "schema": { "$ref": "#/entities/Submission" },
+      "description": "Koleksi pengumpulan tugas kelompok"
+    },
+    "/grades/{gradeId}": {
+      "schema": { "$ref": "#/entities/Grade" },
+      "description": "Koleksi nilai tugas siswa"
+    },
+    "/presentation_assessments/{assessmentId}": {
+      "schema": { "$ref": "#/entities/PresentationAssessment" },
+      "description": "Koleksi penilaian rubrik presentasi"
+    }
+  }
+}
