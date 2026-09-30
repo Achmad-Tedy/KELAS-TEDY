@@ -573,7 +573,7 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       password: teacherData.password || 'guru123',
     };
     setTeachers(prev => [newTeacher, ...prev]);
-    dbUpsertTeacher(newTeacher).catch(err => console.warn('[Supabase] addTeacher err', err));
+    dbUpsertTeacher(newTeacher).catch(err => console.warn('[Firebase] addTeacher err', err));
     return newTeacher;
   };
 
@@ -582,12 +582,12 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (currentUser?.id === updated.id) {
       setCurrentUser(prev => (prev ? { ...prev, name: updated.name, email: updated.email, title: updated.title } : null));
     }
-    dbUpsertTeacher(updated).catch(err => console.warn('[Supabase] updateTeacher err', err));
+    dbUpsertTeacher(updated).catch(err => console.warn('[Firebase] updateTeacher err', err));
   };
 
   const deleteTeacher = (teacherId: string) => {
     setTeachers(prev => prev.filter(t => t.id !== teacherId));
-    dbDeleteTeacher(teacherId).catch(err => console.warn('[Supabase] deleteTeacher err', err));
+    dbDeleteTeacher(teacherId).catch(err => console.warn('[Firebase] deleteTeacher err', err));
   };
 
   // ADMIN & GURU: Student Management
@@ -616,7 +616,7 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       })
     );
 
-    dbUpsertStudent(newStudent).catch(err => console.warn('[Supabase] addStudent err', err));
+    dbUpsertStudent(newStudent).catch(err => console.warn('[Firebase] addStudent err', err));
     return newStudent;
   };
 
@@ -639,7 +639,7 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         return c;
       })
     );
-    dbUpsertStudent(updatedStudent).catch(err => console.warn('[Supabase] updateStudent err', err));
+    dbUpsertStudent(updatedStudent).catch(err => console.warn('[Firebase] updateStudent err', err));
   };
 
   const deleteStudent = (studentId: string) => {
@@ -666,7 +666,7 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         return updated;
       })
     );
-    dbDeleteStudent(studentId).catch(err => console.warn('[Supabase] deleteStudent err', err));
+    dbDeleteStudent(studentId).catch(err => console.warn('[Firebase] deleteStudent err', err));
   };
 
   const bulkAddStudents = (studentsList: Omit<Student, 'id'>[], targetClassId: string) => {
@@ -695,7 +695,7 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       })
     );
 
-    dbBulkUpsertStudents(createdList).catch(err => console.warn('[Supabase] bulkAddStudents err', err));
+    dbBulkUpsertStudents(createdList).catch(err => console.warn('[Firebase] bulkAddStudents err', err));
   };
 
   const clearStudentsInClass = (classId: string) => {
@@ -710,7 +710,7 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         return c;
       })
     );
-    dbDeleteStudentsByClass(classId).catch(err => console.warn('[Supabase] clearStudents err', err));
+    dbDeleteStudentsByClass(classId).catch(err => console.warn('[Firebase] clearStudents err', err));
   };
 
   // Group helpers
@@ -723,7 +723,7 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       updatedAt: now,
     };
     setGroups(prev => [...prev, newGroup]);
-    dbUpsertGroup(newGroup).catch(err => console.warn('[Supabase Sync] createGroup:', err));
+    dbUpsertGroup(newGroup).catch(err => console.warn('[Firebase Sync] createGroup:', err));
     return newGroup;
   };
 
@@ -758,7 +758,7 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     };
 
     setGroups(prev => [...prev, newGroup]);
-    dbUpsertGroup(newGroup).catch(err => console.warn('[Supabase Sync] registerStudentGroup:', err));
+    dbUpsertGroup(newGroup).catch(err => console.warn('[Firebase Sync] registerStudentGroup:', err));
     return newGroup;
   };
 
@@ -768,7 +768,7 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       updatedAt: new Date().toISOString(),
     };
     setGroups(prev => prev.map(g => (g.id === updatedGroup.id ? withTimestamp : g)));
-    dbUpsertGroup(withTimestamp).catch(err => console.warn('[Supabase Sync] updateGroup:', err));
+    dbUpsertGroup(withTimestamp).catch(err => console.warn('[Firebase Sync] updateGroup:', err));
   };
 
   const deleteGroup = (groupId: string): { success: boolean; message?: string } => {
@@ -797,7 +797,7 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
 
     setGroups(prev => prev.filter(g => g.id !== groupId));
-    dbDeleteGroup(groupId).catch(err => console.warn('[Supabase Sync] deleteGroup:', err));
+    dbDeleteGroup(groupId).catch(err => console.warn('[Firebase Sync] deleteGroup:', err));
     return { success: true, message: 'Kelompok berhasil dihapus secara permanen.' };
   };
 
@@ -872,7 +872,7 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     });
 
     setGroups(prev => [...prev, ...createdGroups]);
-    dbBulkUpsertGroups(createdGroups).catch(err => console.warn('[Supabase Sync] autoGenerateGroups:', err));
+    dbBulkUpsertGroups(createdGroups).catch(err => console.warn('[Firebase Sync] autoGenerateGroups:', err));
   };
 
   const getStudentsByClass = (classId: string): Student[] => {
@@ -910,18 +910,18 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       createdAt: new Date().toISOString(),
     };
     setAssignments(prev => [newAssignment, ...prev]);
-    dbUpsertAssignment(newAssignment).catch(err => console.warn('[Supabase Sync] createAssignment:', err));
+    dbUpsertAssignment(newAssignment).catch(err => console.warn('[Firebase Sync] createAssignment:', err));
     return newAssignment;
   };
 
   const updateAssignment = (updated: Assignment) => {
     setAssignments(prev => prev.map(a => (a.id === updated.id ? updated : a)));
-    dbUpsertAssignment(updated).catch(err => console.warn('[Supabase Sync] updateAssignment:', err));
+    dbUpsertAssignment(updated).catch(err => console.warn('[Firebase Sync] updateAssignment:', err));
   };
 
   const deleteAssignment = (assignmentId: string) => {
     setAssignments(prev => prev.filter(a => a.id !== assignmentId));
-    dbDeleteAssignment(assignmentId).catch(err => console.warn('[Supabase Sync] deleteAssignment:', err));
+    dbDeleteAssignment(assignmentId).catch(err => console.warn('[Firebase Sync] deleteAssignment:', err));
   };
 
   // Submission method
@@ -979,7 +979,7 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       return [newSubmission, ...remaining];
     });
 
-    dbUpsertSubmission(newSubmission).catch(err => console.warn('[Supabase Sync] submitAssignmentWork:', err));
+    dbUpsertSubmission(newSubmission).catch(err => console.warn('[Firebase Sync] submitAssignmentWork:', err));
   };
 
   // Grade methods
@@ -1014,7 +1014,7 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       return [...newGrades, ...remaining];
     });
 
-    dbBulkUpsertGrades(newGrades).catch(err => console.warn('[Supabase Sync] saveGroupUniformGrade:', err));
+    dbBulkUpsertGrades(newGrades).catch(err => console.warn('[Firebase Sync] saveGroupUniformGrade:', err));
   };
 
   const saveIndividualGrade = (
@@ -1047,7 +1047,7 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       return [newGrade, ...remaining];
     });
 
-    dbBulkUpsertGrades([newGrade]).catch(err => console.warn('[Supabase Sync] saveIndividualGrade:', err));
+    dbBulkUpsertGrades([newGrade]).catch(err => console.warn('[Firebase Sync] saveIndividualGrade:', err));
   };
 
   // Presentation assessment rubric
@@ -1099,8 +1099,8 @@ export const SchoolProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       return [...updatedGrades, ...remaining];
     });
 
-    dbUpsertPresentation(newAssessment).catch(err => console.warn('[Supabase Sync] savePresentationAssessment:', err));
-    dbBulkUpsertGrades(updatedGrades).catch(err => console.warn('[Supabase Sync] presentation grades:', err));
+    dbUpsertPresentation(newAssessment).catch(err => console.warn('[Firebase Sync] savePresentationAssessment:', err));
+    dbBulkUpsertGrades(updatedGrades).catch(err => console.warn('[Firebase Sync] presentation grades:', err));
   };
 
   const resetAllData = () => {
