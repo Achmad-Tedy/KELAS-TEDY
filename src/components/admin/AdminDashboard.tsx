@@ -22,11 +22,7 @@ import {
   Lock,
   X,
   Layers,
-  HardDrive,
-  ExternalLink,
 } from 'lucide-react';
-import { GoogleDriveModal } from '../drive/GoogleDriveModal';
-import { isDriveConnected, getDriveUser, subscribeToDriveAuth } from '../../lib/googleDrive';
 
 export const AdminDashboard: React.FC = () => {
   const {
@@ -86,19 +82,6 @@ export const AdminDashboard: React.FC = () => {
   const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
   const [teacherToDelete, setTeacherToDelete] = useState<TeacherUser | null>(null);
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
-
-  // Google Drive Admin state
-  const [isDriveModalOpen, setIsDriveModalOpen] = useState(false);
-  const [driveUser, setDriveUser] = useState(getDriveUser());
-  const [isDriveConnectedState, setIsDriveConnectedState] = useState(isDriveConnected());
-
-  useEffect(() => {
-    const unsub = subscribeToDriveAuth((u, token) => {
-      setDriveUser(u);
-      setIsDriveConnectedState(Boolean(u && token));
-    });
-    return () => unsub();
-  }, []);
 
   // Notification message
   const [notif, setNotif] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
@@ -375,58 +358,6 @@ export const AdminDashboard: React.FC = () => {
             </div>
             <div className="text-[11px] text-slate-400 mt-0.5">Kelompok mapel mandiri</div>
           </div>
-        </div>
-      </div>
-
-      {/* Google Drive Admin Storage Banner */}
-      <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-start sm:items-center gap-3.5">
-          <div
-            className={`p-3 rounded-2xl shrink-0 ${
-              isDriveConnectedState
-                ? 'bg-blue-50 text-blue-600 border border-blue-200'
-                : 'bg-slate-100 text-slate-500'
-            }`}
-          >
-            <HardDrive className="w-6 h-6" />
-          </div>
-          <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <h3 className="text-sm font-extrabold text-slate-900">
-                Penyimpanan Pengumpulan Tugas (Google Drive Admin)
-              </h3>
-              {isDriveConnectedState ? (
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                  <span>Google Drive Terhubung</span>
-                </span>
-              ) : (
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold text-slate-500 bg-slate-100 border border-slate-200">
-                  Belum Terhubung
-                </span>
-              )}
-            </div>
-            <p className="text-xs text-slate-600 mt-0.5">
-              {isDriveConnectedState
-                ? `Akun: ${driveUser?.email || 'Admin'} • Folder: "Pengumpulan Tugas - KELAS" (Berkas siswa otomatis tersimpan di sini)`
-                : 'Hubungkan akun Google Drive Admin agar berkas tugas yang dikumpulkan siswa otomatis tersimpan di Drive admin.'}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 self-start md:self-auto shrink-0">
-          <button
-            type="button"
-            onClick={() => setIsDriveModalOpen(true)}
-            className={`px-4 py-2 text-xs font-bold rounded-xl transition flex items-center gap-2 cursor-pointer shadow-xs ${
-              isDriveConnectedState
-                ? 'bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200'
-                : 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm'
-            }`}
-          >
-            <HardDrive className="w-4 h-4" />
-            <span>{isDriveConnectedState ? 'Kelola Folder Drive' : 'Hubungkan Google Drive'}</span>
-          </button>
         </div>
       </div>
 
@@ -1269,12 +1200,6 @@ export const AdminDashboard: React.FC = () => {
           </div>
         </div>
       )}
-
-      {/* Google Drive Admin Modal */}
-      <GoogleDriveModal
-        isOpen={isDriveModalOpen}
-        onClose={() => setIsDriveModalOpen(false)}
-      />
     </div>
   );
 };
