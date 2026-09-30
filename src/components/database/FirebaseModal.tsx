@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { useSchool } from '../../context/SchoolContext';
 import { checkFirebaseHealth, dbSeedInitialData } from '../../lib/firebase';
-import firebaseConfig from '../../../firebase-applet-config.json';
+import firebaseConfig from '../../lib/firebaseConfig';
 
 interface FirebaseModalProps {
   isOpen: boolean;

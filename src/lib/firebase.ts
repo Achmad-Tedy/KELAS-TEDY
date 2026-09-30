@@ -12,7 +12,7 @@ import {
   query,
   where,
 } from 'firebase/firestore';
-import firebaseConfig from '../../firebase-applet-config.json';
+import firebaseConfig from './firebaseConfig';
 import {
   TeacherUser,
   Student,
